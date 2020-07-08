@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--
+ *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="description" content="WebRTC code samples">
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>MediaStream Recording</title>
+    <link rel="stylesheet" href="../css/main.css">
+
+</head>
+
+<body>
+
+    <div id="container">
+
+        <h1>行動櫃員影片錄製測試</h1>
+
+        <div>
+            <div style="margin:auto">鏡頭影像</div>
+            <video id="gum" playsinline autoplay muted></video>
+            <div style="margin:auto">錄製影像</div>
+            <video id="recorded" playsinline loop></video>
+        </div>
+
+        <div>
+            <button id="start">開啟鏡頭</button>
+            <button id="record" disabled>開始錄影</button>
+            <button id="play" disabled>播放錄影內容</button>
+            <button id="download" disabled>下載錄影內容</button>
+        </div>
+
+        <div>
+            <h4>額外選項</h4>
+            <p>Echo cancellation: <input type="checkbox" id="echoCancellation"></p>
+        </div>
+
+        <div>
+            <span>錯誤訊息</span>
+            <span id="errorMsg"></span>
+        </div>
+
+    </div>
+
+    <!-- include adapter for srcObject shim -->
+    <script src="../js/adapter-latest.js"></script>
+    <script src="../js/main.js" async></script>
+
+</body>
+
+</html>
