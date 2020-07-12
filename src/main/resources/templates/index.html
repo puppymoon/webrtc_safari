@@ -26,24 +26,28 @@
     <div id="container">
 
         <h1>行動櫃員影片錄製測試</h1>
+		
+		<div>
+			<input id="contract" type="text" value="20200702合約V1.0">
+		</div>
 
         <div>
             <div style="margin:auto">鏡頭影像</div>
             <video id="gum" playsinline autoplay muted></video>
-            <div style="margin:auto">錄製影像</div>
-            <video id="recorded" playsinline loop></video>
+<!--             <div style="margin:auto">錄製影像</div> -->
+<!--             <video id="recorded" playsinline loop></video> -->
         </div>
 
         <div>
             <button id="start">開啟鏡頭</button>
             <button id="record" disabled>開始錄影</button>
-            <button id="play" disabled>播放錄影內容</button>
-            <button id="download" disabled>下載錄影內容</button>
+<!--             <button id="play" disabled>播放錄影內容</button> -->
+            <button id="download" disabled>上傳錄影內容</button>
         </div>
 
         <div>
             <h4>額外選項</h4>
-            <p>Echo cancellation: <input type="checkbox" id="echoCancellation"></p>
+            <p>Echo cancellation: <input checked type="checkbox" id="echoCancellation"></p>
         </div>
 
         <div>
