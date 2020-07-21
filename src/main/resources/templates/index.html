@@ -17,6 +17,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>MediaStream Recording</title>
+    <link rel="shortcut icon" href="#"/>
     <link rel="stylesheet" href="../css/main.css">
 
 </head>
@@ -26,40 +27,89 @@
     <div id="container">
 
         <h1>行動櫃員影片錄製測試</h1>
-		
-		<div>
-			<input id="contract" type="text" value="20200702合約V1.0">
-		</div>
+
+        <div>
+            <input id="contract" type="text" value="20200702合約V1.0">
+        </div>
 
         <div>
             <div style="margin:auto">鏡頭影像</div>
             <video id="gum" playsinline autoplay muted></video>
-<!--             <div style="margin:auto">錄製影像</div> -->
-<!--             <video id="recorded" playsinline loop></video> -->
+            <!--             <div style="margin:auto">錄製影像</div> -->
+            <!--             <video id="recorded" playsinline loop></video> -->
         </div>
 
         <div>
             <button id="start">開啟鏡頭</button>
             <button id="record" disabled>開始錄影</button>
-<!--             <button id="play" disabled>播放錄影內容</button> -->
+            <!--             <button id="play" disabled>播放錄影內容</button> -->
             <button id="download" disabled>上傳錄影內容</button>
         </div>
 
         <div>
+            <button id="video176">176X144</button>
+            <button id="video320">320X240</button>
+            <button id="video640">640X480</button>
+        </div>
+
+        <!-- <div>
             <h4>額外選項</h4>
             <p>Echo cancellation: <input checked type="checkbox" id="echoCancellation"></p>
-        </div>
+        </div> -->
 
         <div>
             <span>錯誤訊息</span>
             <span id="errorMsg"></span>
         </div>
 
+        <fieldset>
+            <legend>簽名板測試</legend>
+            <div id="signBlockDiv1"
+                style="text-align: center;border-color:#aaaaee;border-style:solid;border-width:3px;padding:5px;">
+                <span id="signBlock"></span>
+            </div>
+            <div id="signBlockDiv2" class="condition-button-block">
+                <button type="button" id="sign_clear">清除</button>
+                <button type="button" id="btn_submit">送出簽名</button>
+            </div>
+        </fieldset>
+
     </div>
 
-    <!-- include adapter for srcObject shim -->
+    <script src="../js/jquery.js"></script>
+    <!-- 錄製影片js -->
     <script src="../js/adapter-latest.js"></script>
+    <!-- 手寫板js -->
+    <script src="../js/jSignature.min.js"></script>
     <script src="../js/main.js" async></script>
+
+    <script>
+        $('#signBlockDiv1').jSignature({
+            'UndoButton': true,
+            'background-color': 'transparent',
+            'decor-color': 'transparent'
+        });
+
+        // $('#signBlockDiv1').jSignature('importData', defaultSign);
+
+        $('#sign_clear').click(function () {
+            $("#signBlockDiv1").jSignature("clear");
+        });
+
+        $('#btn_submit').click(function () {
+
+            const formData = new FormData();
+
+            //將簽名轉成Base64字串
+            var signData = $("#signBlockDiv1").jSignature("getData", "image");
+            formData.append("signature", signData[1]);
+            formData.append("contract", document.getElementById("contract").value);
+            fetch("https://172.24.189.177:8443" + "/uploadSignature", {
+                method: 'POST',
+                body: formData
+            });
+        });
+    </script>
 
 </body>
 

@@ -10,6 +10,7 @@
   padding-left: 2px;
   padding-right: 2px;
   width: 99px;
+  height: 50px;
 }
 
 button:last-of-type {
@@ -23,7 +24,7 @@ p.borderBelow {
 
 video {
   vertical-align: top;
-  --width: 25vw;
+  --width: 40vw;
   width: var(--width);
   height: calc(var(--width) * 0.5625);
   border-style: solid;

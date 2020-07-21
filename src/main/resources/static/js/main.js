@@ -1,20 +1,21 @@
 /*
-*  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
-*
-*  Use of this source code is governed by a BSD-style license
-*  that can be found in the LICENSE file in the root of the source
-*  tree.
-*/
+ *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+ */
 
 // This code is adapted from
 // https://rawgit.com/Miguelao/demos/master/mediarecorder.html
 
-'use strict';
+// 'use strict';
 
 /* globals MediaRecorder */
 
 let mediaRecorder;
 let recordedBlobs;
+let url = "https://35.229.229.136:8443";
 
 const errorMsgElement = document.querySelector('span#errorMsg');
 const recordedVideo = document.querySelector('video#recorded');
@@ -27,7 +28,7 @@ recordButton.addEventListener('click', () => {
   } else {
     stopRecording();
     recordButton.textContent = '開始錄影';
-//    playButton.disabled = false;
+    //    playButton.disabled = false;
     downloadButton.disabled = false;
   }
 });
@@ -46,7 +47,9 @@ recordButton.addEventListener('click', () => {
 // 上傳錄影內容點擊事件
 const downloadButton = document.querySelector('button#download');
 downloadButton.addEventListener('click', () => {
-  const blob = new Blob(recordedBlobs, { type: 'video/webm' });
+  const blob = new Blob(recordedBlobs, {
+    type: 'video/webm'
+  });
   // const url = window.URL.createObjectURL(blob);
   // const a = document.createElement('a');
   // a.style.display = 'none';
@@ -54,15 +57,25 @@ downloadButton.addEventListener('click', () => {
   // a.download = 'test.webm';
   // document.body.appendChild(a);
   // a.click();
-  
+
   // const response = await
   // fetch("https://wiki.epfl.ch/lapa-studio/documents/DTS/laser%20tutorial.pdf");
   // const content = await response.blob();
   console.log(blob.size);
+
   const formData = new FormData();
+
+  //將簽名轉成Base64字串
+  // var signData = $("#signBlockDiv1").jSignature("getData", "svgbase64");
+  //  var signData = $("#signBlockDiv1").jSignature("getData", "image");
+  //  formData.append("signature", signData[1]);
+
   formData.append("files", blob);
-  formData.append("contract",document.getElementById("contract").value);
-  fetch("https://localhost:8443" + "/uploadVideo", { method: 'POST', body: formData });
+  formData.append("contract", document.getElementById("contract").value);
+  fetch(url + "/uploadVideo", {
+    method: 'POST',
+    body: formData
+  });
 
   // setTimeout(() => {
   // document.body.removeChild(a);
@@ -82,27 +95,39 @@ function handleDataAvailable(event) {
 function startRecording() {
 
   recordedBlobs = [];
-  let options = { mimeType: 'video/webm;codecs=vp9,opus' };
+  let options = {
+    mimeType: 'video/webm;codecs=vp9,opus'
+  };
   try {
     if (MediaRecorder.isTypeSupported) {
-      options = { mimeType: "video/webm;codecs=vp9" };
+      options = {
+        mimeType: "video/webm;codecs=vp9"
+      };
       if (!MediaRecorder.isTypeSupported(options.mimeType)) {
         console.error(`${options.mimeType} is not Supported`);
         errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
-        options = { mimeType: "video/webm;codecs=vp8" };
+        options = {
+          mimeType: "video/webm;codecs=vp8"
+        };
         if (!MediaRecorder.isTypeSupported(options.mimeType)) {
           console.error(`${options.mimeType} is not Supported`);
           errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
-          options = { mimeType: "video/webm" };
+          options = {
+            mimeType: "video/webm"
+          };
           if (!MediaRecorder.isTypeSupported(options.mimeType)) {
             console.error(`${options.mimeType} is not Supported`);
             errorMsgElement.innerHTML = `${options.mimeType} is not Supported`;
-            options = { mimeType: "" };
+            options = {
+              mimeType: ""
+            };
           }
         }
       }
     } else {
-      options = { mimeType: "" };
+      options = {
+        mimeType: ""
+      };
     }
     // if (!MediaRecorder.isTypeSupported(options.mimeType)) {
     // console.error(`${options.mimeType} is not supported`);
@@ -118,7 +143,8 @@ function startRecording() {
     // }
   } catch (e) {
     console.error('Exception while creating MediaRecorder1:', e);
-    errorMsgElement.innerHTML = `Exception while creating MediaRecorder2: ${JSON.stringify(e)}`;
+    //    errorMsgElement.innerHTML = `Exception while creating MediaRecorder2: ${JSON.stringify(e)}`;
+    errorMsgElement.innerHTML = e.name + e.message;
     return;
   }
 
@@ -132,7 +158,7 @@ function startRecording() {
 
   console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
   recordButton.textContent = '停止錄影';
-//  playButton.disabled = true;
+  //  playButton.disabled = true;
   downloadButton.disabled = true;
   mediaRecorder.onstop = (event) => {
     console.log('Recorder stopped: ', event);
@@ -166,15 +192,98 @@ async function init(constraints) {
   }
 }
 
+//vga設定
+//   video: {
+//     width: {
+//       exact: 640
+//     },
+//     height: {
+//       exact: 480
+//     }
+//   }
+//qvga設定
+//   video: {
+//     width: {
+//       exact: 320
+//     },
+//     height: {
+//       exact: 240
+//     }
+//   }
+//QCIF設定
+// video: {
+//   width: {
+//     exact: 176
+//   },
+//   height: {
+//     exact: 144
+//   }
+// }
+let videoSetting = {
+  frameRate: 30,
+  width: {
+    exact: 176
+  },
+  height: {
+    exact: 144
+  }
+}
+
+const button160 = document.querySelector('button#video176');
+button160.addEventListener('click', () => {
+
+  videoSetting = {
+    frameRate: 30,
+    width: {
+      exact: 176
+    },
+    height: {
+      exact: 144
+    }
+
+  }
+});
+
+const button320 = document.querySelector('button#video320');
+button320.addEventListener('click', () => {
+
+  videoSetting = {
+    frameRate: 30,
+    width: {
+      exact: 320
+    },
+    height: {
+      exact: 240
+    }
+
+  }
+});
+
+const button640 = document.querySelector('button#video640');
+button640.addEventListener('click', () => {
+
+  videoSetting = {
+    frameRate: 30,
+    width: {
+      exact: 640
+    },
+    height: {
+      exact: 480
+    }
+
+  }
+});
+
 document.querySelector('button#start').addEventListener('click', async () => {
-  const hasEchoCancellation = document.querySelector('#echoCancellation').checked;
+  // const hasEchoCancellation = document.querySelector('#echoCancellation').checked;
+  const hasEchoCancellation = true;
   const constraints = {
     audio: {
-      echoCancellation: { exact: hasEchoCancellation }
+      echoCancellation: {
+        exact: hasEchoCancellation
+      }
     },
-    video: {
-      width: 1280, height: 720
-    }
+    video: videoSetting
   };
   console.log('Using media constraints:', constraints);
   await init(constraints);
